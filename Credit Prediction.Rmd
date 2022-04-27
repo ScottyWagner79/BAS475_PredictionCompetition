@@ -1,0 +1,22 @@
+---
+title: "Credit Prediction Competition"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+-------------------
+Loading in the data
+-------------------
+
+```{r}
+CREDIT <- read.csv("credit.csv")
+
+
+
+
+```
+
+
+
