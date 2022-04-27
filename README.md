@@ -1,1 +1,1 @@
-# BAS475_FinalProject
+# BAS475_PredictionCompetition
