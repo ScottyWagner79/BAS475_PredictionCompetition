@@ -17,9 +17,8 @@ Loading in the data
 
 CREDIT <- read.csv("credit.csv")
 ```
-
-#making index 
-
+```{r}
+#making index
 LENGTH <- nrow(CREDIT) #492 observations. Need nrow since matrix to get 492 
 DATES <- seq( as.Date("4999/1/1"), by = "day", length.out = LENGTH) 
 
@@ -28,7 +27,7 @@ CREDIT %>%
   as_tsibble(index = TimeIndex) -> CREDIT_PREDICTIONS
 
 #class(CREDIT_PREDICTIONS) #verifying is tsiblle now
-
+```
 
 
 
