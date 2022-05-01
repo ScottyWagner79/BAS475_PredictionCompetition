@@ -11,10 +11,21 @@ Loading in the data
 -------------------
 
 ```{r}
+library(fpp3)
+library(fable)
+library(chron)
 CREDIT <- read.csv("credit.csv")
 
+#making index 
 
+LENGTH <- nrow(CREDIT) #492 observations. Need nrow since matrix to get 492 
+DATES <- seq( as.Date("4999/1/1"), by = "day", length.out = LENGTH) 
 
+CREDIT %>% 
+  mutate(TimeIndex = DATES) %>% 
+  as_tsibble(index = TimeIndex) -> CREDIT_PREDICTIONS
+
+class(CREDIT_PREDICTIONS)
 
 ```
 
