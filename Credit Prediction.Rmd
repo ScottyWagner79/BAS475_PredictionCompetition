@@ -11,13 +11,8 @@ library(fpp3)
 library(ggplot2)
 ```
 
--------------------
-Loading in the data
--------------------
-
-CREDIT <- read.csv("credit.csv")
-```
 ```{r}
+CREDIT <- read.csv("credit.csv")
 #making index
 LENGTH <- nrow(CREDIT) #492 observations. Need nrow since matrix to get 492 
 DATES <- seq( as.Date("4999/1/1"), by = "day", length.out = LENGTH) 
@@ -26,7 +21,7 @@ CREDIT %>%
   mutate(TimeIndex = DATES) %>% 
   as_tsibble(index = TimeIndex) -> CREDIT_PREDICTIONS
 
-#class(CREDIT_PREDICTIONS) #verifying is tsiblle now
+class(CREDIT_PREDICTIONS) #verifying is tsiblle now
 ```
 
 
