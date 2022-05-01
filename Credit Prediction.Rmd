@@ -5,12 +5,17 @@ editor_options:
   chunk_output_type: inline
 ---
 
+```{r Loading in  packages}
+library(dplyr)
+library(fpp3)
+library(ggplot2)
+```
 
 -------------------
 Loading in the data
 -------------------
 
-```{r}
+```{r Loading in Data}
 CREDIT <- read.csv("credit.csv")
 
 
