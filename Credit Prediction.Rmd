@@ -21,7 +21,15 @@ CREDIT %>%
   mutate(TimeIndex = DATES) %>% 
   as_tsibble(index = TimeIndex) -> CREDIT_PREDICTIONS
 
-class(CREDIT_PREDICTIONS) #verifying is tsiblle now
+class(CREDIT_PREDICTIONS) #verifying is tsibble now
+```
+
+```{r training and holdout data}
+TRAIN <- CREDIT_PREDICTIONS %>% 
+  filter(TimeIndex <= ymd("4999/12/31"))
+
+HOLDOUT <- CREDIT_PREDICTIONS %>% 
+  filter(TimeIndex > ymd("4999/12/31"))
 ```
 
 
