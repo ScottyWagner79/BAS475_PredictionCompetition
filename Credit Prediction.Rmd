@@ -17,11 +17,11 @@ Loading in the data
 
 ```{r Loading in Data}
 CREDIT <- read.csv("credit.csv")
-
-
-
-
 ```
+
+
+
+
 
 
 
