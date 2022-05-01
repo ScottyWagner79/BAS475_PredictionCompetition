@@ -13,15 +13,20 @@ library(ggplot2)
 
 ```{r}
 CREDIT <- read.csv("credit.csv")
+
 #making index
 LENGTH <- nrow(CREDIT) #492 observations. Need nrow since matrix to get 492 
 DATES <- seq( as.Date("4999/1/1"), by = "day", length.out = LENGTH) 
+
+DATES <- sort(DATES, decreasing = TRUE)
 
 CREDIT %>% 
   mutate(TimeIndex = DATES) %>% 
   as_tsibble(index = TimeIndex) -> CREDIT_PREDICTIONS
 
 class(CREDIT_PREDICTIONS) #verifying is tsibble now
+
+CREDIT_PREDICTIONS %>% autoplot() #increasing trend check
 ```
 
 ```{r training and holdout data}
