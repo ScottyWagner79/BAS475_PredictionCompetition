@@ -25,7 +25,7 @@ CREDIT %>%
   mutate(TimeIndex = DATES) %>% 
   as_tsibble(index = TimeIndex) -> CREDIT_PREDICTIONS
 
-class(CREDIT_PREDICTIONS)
+#class(CREDIT_PREDICTIONS) #verifying is tsiblle now
 
 ```
 
