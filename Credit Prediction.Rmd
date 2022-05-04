@@ -16,7 +16,7 @@ CREDIT <- read.csv("credit.csv")
 
 #making index
 LENGTH <- nrow(CREDIT) #492 observations. Need nrow since matrix to get 492 
-DATES <- seq( as.Date("4999/1/1"), by = "day", length.out = LENGTH) 
+DATES <- seq( as.Date("4999/1/1"), by = "month", length.out = LENGTH) 
 
 DATES <- sort(DATES, decreasing = TRUE)
 
