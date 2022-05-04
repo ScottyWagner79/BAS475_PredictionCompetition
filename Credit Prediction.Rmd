@@ -14,28 +14,59 @@ library(ggplot2)
 ```{r}
 CREDIT <- read.csv("credit.csv")
 
+# create into a tsibble
+
 #making index
 LENGTH <- nrow(CREDIT) #492 observations. Need nrow since matrix to get 492 
 DATES <- seq( as.Date("4999/1/1"), by = "day", length.out = LENGTH) 
 
 DATES <- sort(DATES, decreasing = TRUE)
-
+class(DATES)
 CREDIT %>% 
   mutate(TimeIndex = DATES) %>% 
   as_tsibble(index = TimeIndex) -> CREDIT_PREDICTIONS
 
 class(CREDIT_PREDICTIONS) #verifying is tsibble now
 
-CREDIT_PREDICTIONS %>% autoplot() #increasing trend check
+CREDIT_PREDICTIONS %>% autoplot() #increasing trend check. Needs to be differenced.
+CREDIT_PREDICTIONS %>% gg_tsdisplay(credit_in_millions, plot_type = "partial") #suffers from autocorrealtion and seasonality.
+CREDIT_PREDICTIONS %>% features(credit_in_millions, unitroot_kpss) #fails p-value test. Needs differencing.
+CREDIT_PREDICTIONS %>% features(credit_in_millions, unitroot_ndiffs) #needs one difference
+#CREDIT_PREDICTIONS %>% features(credit_in_millions, unitroot_nsdiffs) #*Does not* need seasonal differencing.
+
+
+#Finding Our Lambda 
+lambda <- CREDIT_PREDICTIONS %>%
+  features(credit_in_millions, features = guerrero) %>%
+  pull(lambda_guerrero)
+#Plot transformed series
+CREDIT_PREDICTIONS %>%
+  autoplot(box_cox(credit_in_millions, lambda)) +
+  labs(y = "",
+       title = latex2exp::TeX(paste0(
+         "Transformed Credit_In_Millions production with $\\lambda$ = ",
+         round(lambda,2)))) 
+
+
 ```
 
 ```{r training and holdout data}
-TRAIN <- CREDIT_PREDICTIONS %>% 
-  filter(TimeIndex <= ymd("4999/12/31"))
+CREDIT_PREDICTIONS_TR <- CREDIT_PREDICTIONS %>%
+  stretch_tsibble(.init = 4, .step = 3)
 
-HOLDOUT <- CREDIT_PREDICTIONS %>% 
-  filter(TimeIndex > ymd("4999/12/31"))
+CREDIT_PREDICTIONS_TR %>% 
+  fill_gaps() %>% 
+  model(RW = RW(credit_in_millions),
+        NAIVE = NAIVE(credit_in_millions)) %>% 
+  forecast(h = 12) %>% 
+  accuracy(CREDIT_PREDICTIONS)
+  
+
 ```
 
 
+```{r}
+
+
+```
 
