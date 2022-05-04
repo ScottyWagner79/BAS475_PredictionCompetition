@@ -65,7 +65,7 @@ CREDIT_PREDICTIONS_TR %>%
 ```
 
 
-```{r fixing issues}
+```{r NEW CODE}
 CREDIT <- read.csv("credit.csv")
 
 Year <- as.data.frame(rep(5000:5040, each = 12))
@@ -74,12 +74,37 @@ Month <- as.data.frame(rep(month.name, 41))
 test <- data.frame(Year, Month)
 names(test) <- c("Year","Month")
 test$Year_Month <- paste(test$Year,test$Month)
+
 CREDIT <- tsibble(Time = yearmonth(test$Year_Month),
              Credit = CREDIT$ï..credit_in_millions,
              index = Time)
 
-class(CREDIT)
+class(CREDIT) # make sure it's a tbl_ts
 CREDIT %>% autoplot() # should be increasing
+
+
+
+CREDIT %>% autoplot() #increasing trend check. Needs to be differenced.
+CREDIT %>% gg_tsdisplay(Credit, plot_type = "partial") #suffers from autocorrealtion and seasonality.
+CREDIT %>% features(Credit, unitroot_kpss) #fails p-value test. Needs differencing.
+CREDIT %>% features(Credit, unitroot_ndiffs) #needs one difference
+#CREDIT_PREDICTIONS %>% features(credit_in_millions, unitroot_nsdiffs) #*Does not* need seasonal differencing.
+
+
+
+
+# finding lambda
+lambda <- CREDIT %>%
+  features(Credit, features = guerrero) %>%
+  pull(lambda_guerrero)
+
+#Plot transformed series
+CREDIT %>%
+  autoplot(box_cox(Credit, lambda)) +
+  labs(y = "",
+       title = latex2exp::TeX(paste0(
+         "Transformed Credit production with $\\lambda$ = ",
+         round(lambda,2)))) 
 
 
 #models:
