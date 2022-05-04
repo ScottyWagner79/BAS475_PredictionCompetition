@@ -56,8 +56,8 @@ CREDIT_PREDICTIONS_TR <- CREDIT_PREDICTIONS %>%
 
 CREDIT_PREDICTIONS_TR %>% 
   fill_gaps() %>% 
-  model(RW = RW(credit_in_millions),
-        NAIVE = NAIVE(credit_in_millions)) %>% 
+  model(RW = RW(ï..credit_in_millions),
+        NAIVE = NAIVE(ï..credit_in_millions)) %>% 
   forecast(h = 12) %>% 
   accuracy(CREDIT_PREDICTIONS)
   
@@ -65,8 +65,45 @@ CREDIT_PREDICTIONS_TR %>%
 ```
 
 
-```{r}
+```{r fixing issues}
+CREDIT <- read.csv("credit.csv")
+
+Year <- as.data.frame(rep(5000:5040, each = 12))
+Year <- sort(Year$`rep(5000:5040, each = 12)`, decreasing = TRUE) #reordering the dates so Credit is increasing
+Month <- as.data.frame(rep(month.name, 41))
+test <- data.frame(Year, Month)
+names(test) <- c("Year","Month")
+test$Year_Month <- paste(test$Year,test$Month)
+CREDIT <- tsibble(Time = yearmonth(test$Year_Month),
+             Credit = CREDIT$ï..credit_in_millions,
+             index = Time)
+
+class(CREDIT)
+CREDIT %>% autoplot() # should be increasing
+
+
+#models:
+
+credit_TR <- CREDIT %>% 
+  stretch_tsibble(.init = 4, .step = 3)
+
+credit_TR %>% fill_gaps() %>% 
+  model(naive = NAIVE(Credit)) %>% forecast(h = 12) %>% accuracy(CREDIT)
+
+credit_TR %>% fill_gaps() %>% 
+  model(drift = RW(Credit)) %>% forecast(h = 12) %>% accuracy(CREDIT)
+
+
 
 
 ```
+
+
+
+
+
+
+
+
+
 
