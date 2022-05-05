@@ -27,6 +27,7 @@ CREDIT <- tsibble(Time = yearmonth(test$Year_Month),
 
 class(CREDIT) # make sure it's a tbl_ts
 CREDIT %>% autoplot() # should be increasing
+
 ```
 
 ```{r checking the trends, differencing, transforming}
@@ -53,6 +54,7 @@ CREDIT %>%
 #Plot differenced series
 CREDIT %>% 
   gg_tsdisplay(difference(box_cox(Credit,lambda)),plot_type = "partial") #stationary at 0, ACF looks fine, first 4 lags appear correlated.
+
 ```
 ```
 
@@ -95,7 +97,6 @@ credit_TR %>%
   ) %>% 
   forecast(h = 12) %>% 
   accuracy(CREDIT) #RMSE of 0.134
-  
   
 #making at least one prediction using ARIMA since it is best model for me.
 fit <- credit_TR %>% 
